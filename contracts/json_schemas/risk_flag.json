@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "JustificationRecord": {
+      "description": "Audit record capturing the proof trace of a derived fact or flag.",
+      "properties": {
+        "rule_id": {
+          "description": "Unique identifier of the Horn rule (e.g., 'RULE_LIQ_MULT_GT_1X').",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_name": {
+          "description": "Human-readable rule title.",
+          "title": "Rule Name",
+          "type": "string"
+        },
+        "market_norm_cite": {
+          "description": "Citation to NVCA Model Term Sheet section or empirical VC dataset.",
+          "title": "Market Norm Cite",
+          "type": "string"
+        },
+        "premise_facts": {
+          "additionalProperties": true,
+          "description": "Ground facts that satisfied the rule antecedents.",
+          "title": "Premise Facts",
+          "type": "object"
+        },
+        "conclusion_flag": {
+          "description": "Derived conclusion or flag title.",
+          "title": "Conclusion Flag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_name",
+        "market_norm_cite",
+        "premise_facts",
+        "conclusion_flag"
+      ],
+      "title": "JustificationRecord",
+      "type": "object"
+    },
+    "SeverityLevel": {
+      "description": "Risk severity classifications for rule-engine flags.",
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "SeverityLevel",
+      "type": "string"
+    }
+  },
+  "description": "A risk assessment flag raised by the symbolic rule engine.",
+  "properties": {
+    "flag_id": {
+      "description": "Unique flag identifier.",
+      "title": "Flag Id",
+      "type": "string"
+    },
+    "clause_id": {
+      "description": "Associated clause ID.",
+      "title": "Clause Id",
+      "type": "string"
+    },
+    "title": {
+      "description": "Concise description of the identified risk.",
+      "title": "Title",
+      "type": "string"
+    },
+    "explanation": {
+      "description": "Plain-English explanation of why this term is risky.",
+      "title": "Explanation",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/SeverityLevel",
+      "description": "Severity rating (low, medium, high, critical)."
+    },
+    "market_standard_source": {
+      "description": "Citation to NVCA/market standard.",
+      "title": "Market Standard Source",
+      "type": "string"
+    },
+    "justification": {
+      "$ref": "#/$defs/JustificationRecord",
+      "description": "Audit proof-tree record."
+    }
+  },
+  "required": [
+    "flag_id",
+    "clause_id",
+    "title",
+    "explanation",
+    "severity",
+    "market_standard_source",
+    "justification"
+  ],
+  "title": "RiskFlag",
+  "type": "object"
+}

@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "ClauseFamily": {
+      "description": "The 12 standard clause families plus 'other' as defined in the project ontology.",
+      "enum": [
+        "liquidation_preference",
+        "anti_dilution",
+        "board_composition",
+        "protective_provisions",
+        "founder_vesting",
+        "information_rights",
+        "rofr_co_sale",
+        "drag_along",
+        "option_pool",
+        "exclusivity_no_shop",
+        "conversion_rights",
+        "redemption_rights",
+        "other"
+      ],
+      "title": "ClauseFamily",
+      "type": "string"
+    }
+  },
+  "description": "Segmented clause contract produced by S1 (Ingest) and labeled by S2 (Classify).",
+  "properties": {
+    "clause_id": {
+      "description": "Unique identifier for the clause within the document.",
+      "title": "Clause Id",
+      "type": "string"
+    },
+    "raw_text": {
+      "description": "Unprocessed verbatim clause text extracted from document.",
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "page_number": {
+      "default": 1,
+      "description": "Page number where the clause begins.",
+      "title": "Page Number",
+      "type": "integer"
+    },
+    "section_header": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Heading or numbered prefix if present.",
+      "title": "Section Header"
+    },
+    "detected_family": {
+      "$ref": "#/$defs/ClauseFamily",
+      "default": "other",
+      "description": "Assigned clause family from S2 classification."
+    },
+    "classification_confidence": {
+      "default": 0.0,
+      "description": "Confidence score from SBERT k-NN / classifier (0.0 to 1.0).",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Classification Confidence",
+      "type": "number"
+    },
+    "is_unclassified": {
+      "default": false,
+      "description": "True if confidence is below threshold, prompting manual user review.",
+      "title": "Is Unclassified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "clause_id",
+    "raw_text"
+  ],
+  "title": "ClauseSpan",
+  "type": "object"
+}

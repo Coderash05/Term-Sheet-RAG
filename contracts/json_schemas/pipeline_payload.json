@@ -1,0 +1,782 @@
+{
+  "$defs": {
+    "AntiDilutionFact": {
+      "description": "Extracted facts for anti-dilution provisions.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "anti_dilution_type": {
+          "$ref": "#/$defs/AntiDilutionType",
+          "default": "broad_based_weighted_average",
+          "description": "Anti-dilution formula type."
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "AntiDilutionFact",
+      "type": "object"
+    },
+    "AntiDilutionType": {
+      "description": "Anti-dilution mechanisms.",
+      "enum": [
+        "broad_based_weighted_average",
+        "narrow_based_weighted_average",
+        "full_ratchet",
+        "none",
+        "unknown"
+      ],
+      "title": "AntiDilutionType",
+      "type": "string"
+    },
+    "AuditTrace": {
+      "description": "Full deterministic reasoning report produced by S4.",
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "risk_score": {
+          "$ref": "#/$defs/DocumentRiskScore"
+        },
+        "flags": {
+          "items": {
+            "$ref": "#/$defs/RiskFlag"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "rule_traces": {
+          "items": {
+            "$ref": "#/$defs/JustificationRecord"
+          },
+          "title": "Rule Traces",
+          "type": "array"
+        }
+      },
+      "required": [
+        "doc_id",
+        "risk_score"
+      ],
+      "title": "AuditTrace",
+      "type": "object"
+    },
+    "BoardCompositionFact": {
+      "description": "Extracted facts for board of directors composition.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "founder_seats": {
+          "default": 0,
+          "description": "Number of founder-appointed seats.",
+          "minimum": 0,
+          "title": "Founder Seats",
+          "type": "integer"
+        },
+        "investor_seats": {
+          "default": 0,
+          "description": "Number of investor-appointed seats.",
+          "minimum": 0,
+          "title": "Investor Seats",
+          "type": "integer"
+        },
+        "independent_seats": {
+          "default": 0,
+          "description": "Number of mutually agreed independent seats.",
+          "minimum": 0,
+          "title": "Independent Seats",
+          "type": "integer"
+        },
+        "total_seats": {
+          "default": 0,
+          "description": "Total board seats.",
+          "minimum": 0,
+          "title": "Total Seats",
+          "type": "integer"
+        },
+        "investor_majority": {
+          "default": false,
+          "description": "True if investor seats strictly exceed founder seats.",
+          "title": "Investor Majority",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "BoardCompositionFact",
+      "type": "object"
+    },
+    "ClauseFamily": {
+      "description": "The 12 standard clause families plus 'other' as defined in the project ontology.",
+      "enum": [
+        "liquidation_preference",
+        "anti_dilution",
+        "board_composition",
+        "protective_provisions",
+        "founder_vesting",
+        "information_rights",
+        "rofr_co_sale",
+        "drag_along",
+        "option_pool",
+        "exclusivity_no_shop",
+        "conversion_rights",
+        "redemption_rights",
+        "other"
+      ],
+      "title": "ClauseFamily",
+      "type": "string"
+    },
+    "ClauseSpan": {
+      "description": "Segmented clause contract produced by S1 (Ingest) and labeled by S2 (Classify).",
+      "properties": {
+        "clause_id": {
+          "description": "Unique identifier for the clause within the document.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "raw_text": {
+          "description": "Unprocessed verbatim clause text extracted from document.",
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "page_number": {
+          "default": 1,
+          "description": "Page number where the clause begins.",
+          "title": "Page Number",
+          "type": "integer"
+        },
+        "section_header": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heading or numbered prefix if present.",
+          "title": "Section Header"
+        },
+        "detected_family": {
+          "$ref": "#/$defs/ClauseFamily",
+          "default": "other",
+          "description": "Assigned clause family from S2 classification."
+        },
+        "classification_confidence": {
+          "default": 0.0,
+          "description": "Confidence score from SBERT k-NN / classifier (0.0 to 1.0).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Classification Confidence",
+          "type": "number"
+        },
+        "is_unclassified": {
+          "default": false,
+          "description": "True if confidence is below threshold, prompting manual user review.",
+          "title": "Is Unclassified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clause_id",
+        "raw_text"
+      ],
+      "title": "ClauseSpan",
+      "type": "object"
+    },
+    "ClauseSummary": {
+      "description": "Plain-English summary of an individual clause with consistency guarantees.",
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "summary_text": {
+          "title": "Summary Text",
+          "type": "string"
+        },
+        "numbers_verified": {
+          "default": true,
+          "description": "True if an automated checker confirmed all numbers match the fact base.",
+          "title": "Numbers Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clause_id",
+        "summary_text"
+      ],
+      "title": "ClauseSummary",
+      "type": "object"
+    },
+    "DocumentMetadata": {
+      "description": "Metadata describing the uploaded term sheet.",
+      "properties": {
+        "doc_id": {
+          "description": "Unique document hash or identifier.",
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "filename": {
+          "description": "Original filename.",
+          "title": "Filename",
+          "type": "string"
+        },
+        "file_type": {
+          "$ref": "#/$defs/DocumentType",
+          "description": "Detected format (pdf, docx, txt)."
+        },
+        "upload_timestamp": {
+          "format": "date-time",
+          "title": "Upload Timestamp",
+          "type": "string"
+        },
+        "total_clauses": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Clauses",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "doc_id",
+        "filename",
+        "file_type"
+      ],
+      "title": "DocumentMetadata",
+      "type": "object"
+    },
+    "DocumentRiskScore": {
+      "description": "Overall calculated risk metrics for the term sheet.",
+      "properties": {
+        "overall_score": {
+          "description": "Normalized risk score from 0 (clean) to 100 (high risk).",
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "title": "Overall Score",
+          "type": "number"
+        },
+        "critical_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Critical Count",
+          "type": "integer"
+        },
+        "high_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "High Count",
+          "type": "integer"
+        },
+        "medium_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Medium Count",
+          "type": "integer"
+        },
+        "low_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Low Count",
+          "type": "integer"
+        },
+        "info_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Info Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "overall_score"
+      ],
+      "title": "DocumentRiskScore",
+      "type": "object"
+    },
+    "DocumentType": {
+      "description": "Supported document formats.",
+      "enum": [
+        "pdf",
+        "docx",
+        "txt"
+      ],
+      "title": "DocumentType",
+      "type": "string"
+    },
+    "ExtractedFacts": {
+      "description": "Aggregated container of all validated facts extracted from the term sheet.",
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "liquidation_preference": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LiquidationPreferenceFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "anti_dilution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AntiDilutionFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "board_composition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BoardCompositionFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "founder_vesting": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VestingFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "protective_provisions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProtectiveProvisionsFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "custom_facts": {
+          "additionalProperties": true,
+          "title": "Custom Facts",
+          "type": "object"
+        }
+      },
+      "required": [
+        "doc_id"
+      ],
+      "title": "ExtractedFacts",
+      "type": "object"
+    },
+    "JustificationRecord": {
+      "description": "Audit record capturing the proof trace of a derived fact or flag.",
+      "properties": {
+        "rule_id": {
+          "description": "Unique identifier of the Horn rule (e.g., 'RULE_LIQ_MULT_GT_1X').",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_name": {
+          "description": "Human-readable rule title.",
+          "title": "Rule Name",
+          "type": "string"
+        },
+        "market_norm_cite": {
+          "description": "Citation to NVCA Model Term Sheet section or empirical VC dataset.",
+          "title": "Market Norm Cite",
+          "type": "string"
+        },
+        "premise_facts": {
+          "additionalProperties": true,
+          "description": "Ground facts that satisfied the rule antecedents.",
+          "title": "Premise Facts",
+          "type": "object"
+        },
+        "conclusion_flag": {
+          "description": "Derived conclusion or flag title.",
+          "title": "Conclusion Flag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_name",
+        "market_norm_cite",
+        "premise_facts",
+        "conclusion_flag"
+      ],
+      "title": "JustificationRecord",
+      "type": "object"
+    },
+    "LiquidationPreferenceFact": {
+      "description": "Extracted facts for liquidation preference clauses.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "multiple": {
+          "default": 1.0,
+          "description": "Liquidation multiple, e.g. 1.0x, 2.0x, 3.0x.",
+          "minimum": 0.0,
+          "title": "Multiple",
+          "type": "number"
+        },
+        "participation": {
+          "$ref": "#/$defs/ParticipationType",
+          "default": "non_participating",
+          "description": "Participation mode (market standard is non-participating)."
+        },
+        "cap_multiple": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Participation cap multiple if capped participating (e.g. 3.0x).",
+          "title": "Cap Multiple"
+        },
+        "seniority": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "pari_passu",
+          "description": "Seniority tier (e.g., senior to common, pari passu with Series A).",
+          "title": "Seniority"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "LiquidationPreferenceFact",
+      "type": "object"
+    },
+    "ParticipationType": {
+      "description": "Liquidation preference participation modes.",
+      "enum": [
+        "non_participating",
+        "fully_participating",
+        "capped_participating",
+        "unknown"
+      ],
+      "title": "ParticipationType",
+      "type": "string"
+    },
+    "ProtectiveProvisionsFact": {
+      "description": "Extracted facts for veto rights and negative covenants.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "requires_series_majority": {
+          "default": true,
+          "description": "Whether major corporate events require separate preferred majority vote.",
+          "title": "Requires Series Majority",
+          "type": "boolean"
+        },
+        "covered_actions": {
+          "description": "List of restricted corporate actions (e.g. sale, liquidation, new share class).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Covered Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "ProtectiveProvisionsFact",
+      "type": "object"
+    },
+    "RiskFlag": {
+      "description": "A risk assessment flag raised by the symbolic rule engine.",
+      "properties": {
+        "flag_id": {
+          "description": "Unique flag identifier.",
+          "title": "Flag Id",
+          "type": "string"
+        },
+        "clause_id": {
+          "description": "Associated clause ID.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "title": {
+          "description": "Concise description of the identified risk.",
+          "title": "Title",
+          "type": "string"
+        },
+        "explanation": {
+          "description": "Plain-English explanation of why this term is risky.",
+          "title": "Explanation",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/SeverityLevel",
+          "description": "Severity rating (low, medium, high, critical)."
+        },
+        "market_standard_source": {
+          "description": "Citation to NVCA/market standard.",
+          "title": "Market Standard Source",
+          "type": "string"
+        },
+        "justification": {
+          "$ref": "#/$defs/JustificationRecord",
+          "description": "Audit proof-tree record."
+        }
+      },
+      "required": [
+        "flag_id",
+        "clause_id",
+        "title",
+        "explanation",
+        "severity",
+        "market_standard_source",
+        "justification"
+      ],
+      "title": "RiskFlag",
+      "type": "object"
+    },
+    "SeverityLevel": {
+      "description": "Risk severity classifications for rule-engine flags.",
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "SeverityLevel",
+      "type": "string"
+    },
+    "SourceSpan": {
+      "description": "Grounding span pointing to the exact character positions and text in source document.",
+      "properties": {
+        "text": {
+          "description": "Exact verbatim excerpt from the document backing the fact.",
+          "title": "Text",
+          "type": "string"
+        },
+        "start_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Start character offset in clause.",
+          "title": "Start Char"
+        },
+        "end_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "End character offset in clause.",
+          "title": "End Char"
+        },
+        "page_number": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 1,
+          "description": "1-indexed page number in source document.",
+          "title": "Page Number"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "SourceSpan",
+      "type": "object"
+    },
+    "VestingFact": {
+      "description": "Extracted facts for founder/key employee vesting.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "total_vesting_years": {
+          "default": 4.0,
+          "description": "Total vesting duration (std is 4 years).",
+          "minimum": 0.0,
+          "title": "Total Vesting Years",
+          "type": "number"
+        },
+        "cliff_months": {
+          "default": 12,
+          "description": "Cliff duration in months (std is 12 months).",
+          "minimum": 0,
+          "title": "Cliff Months",
+          "type": "integer"
+        },
+        "acceleration_type": {
+          "default": "double_trigger",
+          "description": "Acceleration mechanism ('none', 'single_trigger', 'double_trigger').",
+          "title": "Acceleration Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "VestingFact",
+      "type": "object"
+    }
+  },
+  "description": "The complete end-to-end container passed through stages S1 to S5.",
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/DocumentMetadata"
+    },
+    "clauses": {
+      "items": {
+        "$ref": "#/$defs/ClauseSpan"
+      },
+      "title": "Clauses",
+      "type": "array"
+    },
+    "facts": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExtractedFacts"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "audit_trace": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuditTrace"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "summaries": {
+      "items": {
+        "$ref": "#/$defs/ClauseSummary"
+      },
+      "title": "Summaries",
+      "type": "array"
+    },
+    "execution_errors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Execution Errors",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata"
+  ],
+  "title": "PipelinePayload",
+  "type": "object"
+}

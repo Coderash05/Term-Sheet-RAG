@@ -1,0 +1,49 @@
+{
+  "$defs": {
+    "DocumentType": {
+      "description": "Supported document formats.",
+      "enum": [
+        "pdf",
+        "docx",
+        "txt"
+      ],
+      "title": "DocumentType",
+      "type": "string"
+    }
+  },
+  "description": "Metadata describing the uploaded term sheet.",
+  "properties": {
+    "doc_id": {
+      "description": "Unique document hash or identifier.",
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "filename": {
+      "description": "Original filename.",
+      "title": "Filename",
+      "type": "string"
+    },
+    "file_type": {
+      "$ref": "#/$defs/DocumentType",
+      "description": "Detected format (pdf, docx, txt)."
+    },
+    "upload_timestamp": {
+      "format": "date-time",
+      "title": "Upload Timestamp",
+      "type": "string"
+    },
+    "total_clauses": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Total Clauses",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "doc_id",
+    "filename",
+    "file_type"
+  ],
+  "title": "DocumentMetadata",
+  "type": "object"
+}

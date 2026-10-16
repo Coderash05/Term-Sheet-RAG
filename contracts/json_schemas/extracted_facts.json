@@ -1,0 +1,395 @@
+{
+  "$defs": {
+    "AntiDilutionFact": {
+      "description": "Extracted facts for anti-dilution provisions.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "anti_dilution_type": {
+          "$ref": "#/$defs/AntiDilutionType",
+          "default": "broad_based_weighted_average",
+          "description": "Anti-dilution formula type."
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "AntiDilutionFact",
+      "type": "object"
+    },
+    "AntiDilutionType": {
+      "description": "Anti-dilution mechanisms.",
+      "enum": [
+        "broad_based_weighted_average",
+        "narrow_based_weighted_average",
+        "full_ratchet",
+        "none",
+        "unknown"
+      ],
+      "title": "AntiDilutionType",
+      "type": "string"
+    },
+    "BoardCompositionFact": {
+      "description": "Extracted facts for board of directors composition.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "founder_seats": {
+          "default": 0,
+          "description": "Number of founder-appointed seats.",
+          "minimum": 0,
+          "title": "Founder Seats",
+          "type": "integer"
+        },
+        "investor_seats": {
+          "default": 0,
+          "description": "Number of investor-appointed seats.",
+          "minimum": 0,
+          "title": "Investor Seats",
+          "type": "integer"
+        },
+        "independent_seats": {
+          "default": 0,
+          "description": "Number of mutually agreed independent seats.",
+          "minimum": 0,
+          "title": "Independent Seats",
+          "type": "integer"
+        },
+        "total_seats": {
+          "default": 0,
+          "description": "Total board seats.",
+          "minimum": 0,
+          "title": "Total Seats",
+          "type": "integer"
+        },
+        "investor_majority": {
+          "default": false,
+          "description": "True if investor seats strictly exceed founder seats.",
+          "title": "Investor Majority",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "BoardCompositionFact",
+      "type": "object"
+    },
+    "LiquidationPreferenceFact": {
+      "description": "Extracted facts for liquidation preference clauses.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "multiple": {
+          "default": 1.0,
+          "description": "Liquidation multiple, e.g. 1.0x, 2.0x, 3.0x.",
+          "minimum": 0.0,
+          "title": "Multiple",
+          "type": "number"
+        },
+        "participation": {
+          "$ref": "#/$defs/ParticipationType",
+          "default": "non_participating",
+          "description": "Participation mode (market standard is non-participating)."
+        },
+        "cap_multiple": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Participation cap multiple if capped participating (e.g. 3.0x).",
+          "title": "Cap Multiple"
+        },
+        "seniority": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "pari_passu",
+          "description": "Seniority tier (e.g., senior to common, pari passu with Series A).",
+          "title": "Seniority"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "LiquidationPreferenceFact",
+      "type": "object"
+    },
+    "ParticipationType": {
+      "description": "Liquidation preference participation modes.",
+      "enum": [
+        "non_participating",
+        "fully_participating",
+        "capped_participating",
+        "unknown"
+      ],
+      "title": "ParticipationType",
+      "type": "string"
+    },
+    "ProtectiveProvisionsFact": {
+      "description": "Extracted facts for veto rights and negative covenants.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "requires_series_majority": {
+          "default": true,
+          "description": "Whether major corporate events require separate preferred majority vote.",
+          "title": "Requires Series Majority",
+          "type": "boolean"
+        },
+        "covered_actions": {
+          "description": "List of restricted corporate actions (e.g. sale, liquidation, new share class).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Covered Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "ProtectiveProvisionsFact",
+      "type": "object"
+    },
+    "SourceSpan": {
+      "description": "Grounding span pointing to the exact character positions and text in source document.",
+      "properties": {
+        "text": {
+          "description": "Exact verbatim excerpt from the document backing the fact.",
+          "title": "Text",
+          "type": "string"
+        },
+        "start_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Start character offset in clause.",
+          "title": "Start Char"
+        },
+        "end_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "End character offset in clause.",
+          "title": "End Char"
+        },
+        "page_number": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 1,
+          "description": "1-indexed page number in source document.",
+          "title": "Page Number"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "SourceSpan",
+      "type": "object"
+    },
+    "VestingFact": {
+      "description": "Extracted facts for founder/key employee vesting.",
+      "properties": {
+        "clause_id": {
+          "description": "ID of the clause this fact was extracted from.",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan",
+          "description": "Verbatim text span grounding this fact."
+        },
+        "is_grounded": {
+          "default": true,
+          "description": "Indicates if source span validator passed.",
+          "title": "Is Grounded",
+          "type": "boolean"
+        },
+        "total_vesting_years": {
+          "default": 4.0,
+          "description": "Total vesting duration (std is 4 years).",
+          "minimum": 0.0,
+          "title": "Total Vesting Years",
+          "type": "number"
+        },
+        "cliff_months": {
+          "default": 12,
+          "description": "Cliff duration in months (std is 12 months).",
+          "minimum": 0,
+          "title": "Cliff Months",
+          "type": "integer"
+        },
+        "acceleration_type": {
+          "default": "double_trigger",
+          "description": "Acceleration mechanism ('none', 'single_trigger', 'double_trigger').",
+          "title": "Acceleration Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id",
+        "source_span"
+      ],
+      "title": "VestingFact",
+      "type": "object"
+    }
+  },
+  "description": "Aggregated container of all validated facts extracted from the term sheet.",
+  "properties": {
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "liquidation_preference": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LiquidationPreferenceFact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "anti_dilution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AntiDilutionFact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "board_composition": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BoardCompositionFact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "founder_vesting": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VestingFact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "protective_provisions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProtectiveProvisionsFact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "custom_facts": {
+      "additionalProperties": true,
+      "title": "Custom Facts",
+      "type": "object"
+    }
+  },
+  "required": [
+    "doc_id"
+  ],
+  "title": "ExtractedFacts",
+  "type": "object"
+}
