@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "description": "Corpus manifest tracking all term-sheet documents used for training, evaluation, and rule-base calibration.",
+    "version": "0.1.0",
+    "last_updated": "2026-10-19"
+  },
+  "knowledge_sources": [
+    {
+      "id": "nvca-model-term-sheet",
+      "title": "NVCA Model Term Sheet",
+      "url": "https://nvca.org/resources/model-legal-documents/",
+      "type": "template",
+      "licence": "Public / NVCA standard licence",
+      "notes": "Primary source for US market norms. Includes deal-term frequency data in Enhanced version.",
+      "clause_families_covered": [
+        "liquidation_preference", "anti_dilution", "board_composition",
+        "protective_provisions", "founder_vesting", "information_rights",
+        "rofr_co_sale", "drag_along", "option_pool", "conversion_rights",
+        "redemption_rights"
+      ]
+    },
+    {
+      "id": "nvca-enhanced-term-sheet",
+      "title": "NVCA Enhanced Model Term Sheet (with deal-term frequency)",
+      "url": "https://nvca.org/resources/model-legal-documents/",
+      "type": "template",
+      "licence": "Public / NVCA standard licence",
+      "notes": "Extended version embedding market-practice frequency annotations."
+    },
+    {
+      "id": "yc-safe-post-money",
+      "title": "Y Combinator Post-Money SAFE",
+      "url": "https://www.ycombinator.com/documents",
+      "type": "template",
+      "licence": "Public / YC open licence",
+      "notes": "Secondary format; stretch goal for SAFE analysis support."
+    },
+    {
+      "id": "yc-safe-pre-money",
+      "title": "Y Combinator Pre-Money SAFE (Legacy)",
+      "url": "https://www.ycombinator.com/documents",
+      "type": "template",
+      "licence": "Public / YC open licence",
+      "notes": "Legacy pre-money SAFE for comparison."
+    }
+  ],
+  "evaluation_corpus": {
+    "target_count": 50,
+    "split": {
+      "dev": 20,
+      "test": 30
+    },
+    "documents": [
+      {
+        "id": "eval-001",
+        "filename": "",
+        "source": "NVCA Model Term Sheet (verbatim)",
+        "is_synthetic": false,
+        "split": "dev",
+        "provenance": "Downloaded from nvca.org",
+        "licence": "NVCA public",
+        "annotator_a": null,
+        "annotator_b": null,
+        "annotation_status": "pending"
+      },
+      {
+        "id": "eval-002",
+        "filename": "",
+        "source": "YC Post-Money SAFE",
+        "is_synthetic": false,
+        "split": "dev",
+        "provenance": "Downloaded from ycombinator.com/documents",
+        "licence": "YC open licence",
+        "annotator_a": null,
+        "annotator_b": null,
+        "annotation_status": "pending"
+      }
+    ]
+  },
+  "classifier_exemplars": {
+    "description": "Clause exemplar bank for SBERT k-NN classifier training.",
+    "clause_families": [
+      "liquidation_preference",
+      "anti_dilution",
+      "board_composition",
+      "protective_provisions",
+      "founder_vesting",
+      "information_rights",
+      "rofr_co_sale",
+      "drag_along",
+      "option_pool",
+      "exclusivity_no_shop",
+      "conversion_rights",
+      "redemption_rights",
+      "other"
+    ],
+    "exemplar_counts": {},
+    "out_of_domain_negatives": {
+      "source": "LEDGAR provisions (Tuggener et al., 2020)",
+      "url": "https://aclanthology.org/2020.lrec-1.155",
+      "status": "planned"
+    }
+  }
+}
