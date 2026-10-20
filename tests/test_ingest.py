@@ -139,7 +139,12 @@ class TestClauseSegmenter:
         """Very short fragments should be merged into predecessors."""
         config = SegmenterConfig(min_clause_chars=50)
         segmenter = ClauseSegmenter(config=config)
-        pages = [(1, "1. Section One\nShort.\n2. Section Two with enough text to stand alone as a clause.")]
+        pages = [
+            (
+                1,
+                "1. Section One\nShort.\n2. Section Two with enough text to stand alone as a clause.",
+            )
+        ]
         segments = segmenter.segment(pages)
         # "Short." alone is < 50 chars, should merge
         assert all(len(s.text) >= 10 for s in segments)

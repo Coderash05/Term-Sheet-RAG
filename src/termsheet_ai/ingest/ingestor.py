@@ -60,9 +60,7 @@ class Ingestor(BaseIngestor):
         self.extractor = extractor or TextExtractor()
         self.segmenter = segmenter or ClauseSegmenter(config=segmenter_config)
 
-    def ingest(
-        self, file_path: Union[str, Path]
-    ) -> Tuple[DocumentMetadata, List[ClauseSpan]]:
+    def ingest(self, file_path: Union[str, Path]) -> Tuple[DocumentMetadata, List[ClauseSpan]]:
         """Parse a term-sheet document and return metadata + segmented clauses.
 
         Args:
@@ -82,8 +80,7 @@ class Ingestor(BaseIngestor):
 
         if extraction.is_empty:
             logger.warning(
-                "Extraction yielded no text for %s (method=%s). "
-                "Returning empty clause list.",
+                "Extraction yielded no text for %s (method=%s). Returning empty clause list.",
                 path.name,
                 extraction.method,
             )

@@ -109,9 +109,7 @@ class ClauseSegmenter:
     def __init__(self, config: Optional[SegmenterConfig] = None) -> None:
         self.config = config or SegmenterConfig()
 
-    def segment(
-        self, pages: List[Tuple[int, str]]
-    ) -> List[RawSegment]:
+    def segment(self, pages: List[Tuple[int, str]]) -> List[RawSegment]:
         """Segment page-level text into clause-level RawSegments.
 
         Args:
@@ -127,15 +125,12 @@ class ClauseSegmenter:
         segments = self._segment_by_patterns(pages)
 
         if len(segments) >= self.config.min_segments_for_pattern:
-            logger.info(
-                "Pattern segmentation produced %d clauses.", len(segments)
-            )
+            logger.info("Pattern segmentation produced %d clauses.", len(segments))
             return self._post_process(segments)
 
         # Fallback: sentence-window segmentation
         logger.info(
-            "Pattern segmentation yielded only %d segment(s); "
-            "falling back to sentence windows.",
+            "Pattern segmentation yielded only %d segment(s); falling back to sentence windows.",
             len(segments),
         )
         segments = self._segment_by_sentences(pages)
@@ -145,9 +140,7 @@ class ClauseSegmenter:
     # Pattern-based segmentation
     # ------------------------------------------------------------------
 
-    def _segment_by_patterns(
-        self, pages: List[Tuple[int, str]]
-    ) -> List[RawSegment]:
+    def _segment_by_patterns(self, pages: List[Tuple[int, str]]) -> List[RawSegment]:
         """Split text at detected clause boundaries."""
         segments: List[RawSegment] = []
 
@@ -169,18 +162,12 @@ class ClauseSegmenter:
             # Text before the first boundary
             preamble = page_text[: boundaries[0].start()].strip()
             if preamble:
-                segments.append(
-                    RawSegment(text=preamble, page_number=page_num)
-                )
+                segments.append(RawSegment(text=preamble, page_number=page_num))
 
             # Each boundary starts a new segment that runs until the next
             for i, match in enumerate(boundaries):
                 start = match.start()
-                end = (
-                    boundaries[i + 1].start()
-                    if i + 1 < len(boundaries)
-                    else len(page_text)
-                )
+                end = boundaries[i + 1].start() if i + 1 < len(boundaries) else len(page_text)
                 chunk = page_text[start:end].strip()
                 if not chunk:
                     continue
@@ -209,9 +196,7 @@ class ClauseSegmenter:
     # Sentence-window fallback
     # ------------------------------------------------------------------
 
-    def _segment_by_sentences(
-        self, pages: List[Tuple[int, str]]
-    ) -> List[RawSegment]:
+    def _segment_by_sentences(self, pages: List[Tuple[int, str]]) -> List[RawSegment]:
         """Split text into overlapping sentence windows."""
         segments: List[RawSegment] = []
         window = self.config.sentence_window_size
@@ -227,9 +212,7 @@ class ClauseSegmenter:
                 window_sents = sentences[i : i + window]
                 chunk = " ".join(window_sents).strip()
                 if chunk:
-                    segments.append(
-                        RawSegment(text=chunk, page_number=page_num)
-                    )
+                    segments.append(RawSegment(text=chunk, page_number=page_num))
 
         return segments
 

@@ -85,9 +85,7 @@ class TextExtractor:
         elif suffix == ".txt":
             return self._extract_txt(path)
         else:
-            raise ValueError(
-                f"Unsupported file type '{suffix}'. Supported: .pdf, .docx, .txt"
-            )
+            raise ValueError(f"Unsupported file type '{suffix}'. Supported: .pdf, .docx, .txt")
 
     # ------------------------------------------------------------------
     # PDF Extraction
@@ -156,9 +154,7 @@ class TextExtractor:
             import pytesseract
             from PIL import Image
         except ImportError as exc:
-            result.warnings.append(
-                f"OCR dependencies not fully installed ({exc}); cannot OCR."
-            )
+            result.warnings.append(f"OCR dependencies not fully installed ({exc}); cannot OCR.")
             return result
 
         try:
