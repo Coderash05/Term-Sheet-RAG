@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TermSheet AI Attribute Schema",
+  "description": "JSON schema for extracting specific clause variables and their source text spans. Use null for any field not stated in the document.",
+  "type": "object",
+  "properties": {
+    "liquidation_preference": {
+      "type": ["object", "null"],
+      "properties": {
+        "source_span": {
+          "type": "string",
+          "description": "The exact quote from the document proving these liquidation values."
+        },
+        "multiple": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "The payout multiple (e.g., 1.0, 2.0)."
+        },
+        "participation": {
+          "type": ["boolean", "null"],
+          "description": "True if investors have participating preferred rights, false if non-participating."
+        },
+        "cap": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Participation cap as a multiple of the original purchase price (e.g., 3 means 3x). Null if no cap."
+        }
+      },
+      "required": ["source_span", "multiple", "participation", "cap"],
+      "additionalProperties": false
+    },
+    "vesting": {
+      "type": ["object", "null"],
+      "properties": {
+        "source_span": {
+          "type": "string",
+          "description": "The exact quote proving the vesting schedule."
+        },
+        "vesting_months": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Total duration of the vesting schedule in months (e.g., 48)."
+        },
+        "cliff_months": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "The cliff period in months (e.g., 12). Null if no cliff."
+        }
+      },
+      "required": ["source_span", "vesting_months", "cliff_months"],
+      "additionalProperties": false
+    },
+    "board_of_directors": {
+      "type": ["object", "null"],
+      "properties": {
+        "source_span": {
+          "type": "string",
+          "description": "The exact quote proving the board composition."
+        },
+        "investor_seats": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Number of board seats controlled by investors."
+        },
+        "founder_seats": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Number of board seats controlled by founders."
+        },
+        "independent_seats": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Number of independent board seats."
+        }
+      },
+      "required": ["source_span", "investor_seats", "founder_seats", "independent_seats"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["liquidation_preference", "vesting", "board_of_directors"],
+  "additionalProperties": false
+}
