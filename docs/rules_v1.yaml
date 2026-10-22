@@ -1,0 +1,14 @@
+rules:
+  - id: "R-LP-01"
+    family: "liquidation_preference"
+    condition: "multiple > 1"
+    severity: "HIGH"
+    message: "Liquidation payout multiple exceeds standard 1x."
+    source: "NVCA Model Term Sheet"
+
+  - id: "R-CT-02"
+    family: "board_of_directors"
+    condition: "investor_seats > founder_seats"
+    severity: "HIGH"
+    message: "Investors control the majority of the board."
+    source: "NVCA Model Term Sheet"
