@@ -55,13 +55,37 @@
 
 ## Week 2 (18–24 Oct 2026)
 
+### Completed
+
+#### M3 — Deep Learning: Embeddings & Search
+- [x] **Exemplar Bank** — [`src/termsheet_ai/classify/exemplars.py`](../src/termsheet_ai/classify/exemplars.py)
+  - 104 curated exemplars (exactly 8 per family across all 13 `ClauseFamily` values)
+  - Grounded in NVCA Model Term Sheet, NVCA Enhanced, YC SAFEs, and LEDGAR out-of-domain boilerplate
+  - Section header + body context boosting helper (`prepare_clause_text`)
+- [x] **TF-IDF Baseline Classifier** — [`src/termsheet_ai/classify/tfidf.py`](../src/termsheet_ai/classify/tfidf.py)
+  - N-gram (1, 2) TF-IDF vectorizer + balanced Logistic Regression
+  - Calibrated probability outputs and confidence thresholding (`is_unclassified=True`, `ClauseFamily.OTHER`)
+  - Out-of-distribution & noise length guard
+- [x] **SBERT + ChromaDB k-NN + LR Classifier** — [`src/termsheet_ai/classify/sbert.py`](../src/termsheet_ai/classify/sbert.py)
+  - `all-MiniLM-L6-v2` 384-d normalized embeddings with `@functools.lru_cache` singleton loading
+  - Isolated in-memory `chromadb.EphemeralClient` vector collection with cosine space
+  - Three scoring modes: ChromaDB cosine $k$-NN, Logistic Regression head, and Hybrid weighted blend
+  - Built-in `retrieve_nearest_exemplars` helper for Stage S5 RAG summaries
+  - Pydantic v2 immutability preserving input spans
+- [x] **Classification Metrics & Evaluation Benchmark** — [`src/termsheet_ai/classify/metrics.py`](../src/termsheet_ai/classify/metrics.py)
+  - Precision, Recall, Macro-F1, Weighted-F1, and Confusion Matrix computation
+  - 5-fold stratified cross-validation benchmark comparing TF-IDF vs. SBERT variants
+- [x] **Test Suite & CI Configuration** — [`tests/test_classify.py`](../tests/test_classify.py) and [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+  - 29 unit and integration tests covering all components, modes, edge cases, and end-to-end `TermSheetPipeline`
+  - All 51 repository tests passing; zero lint errors
+
 ### Planned
 - **M5**: Build ontology v1 (NetworkX graph) + author first 15 rules in YAML
 - **M6**: Implement forward-chaining engine v0 with justification records
-- **M3**: Create exemplar bank + TF-IDF baseline classifier + SBERT k-NN v0
+- **M3**: Completed Week 2 deliverables; ready for S1 -> S2 -> S3 end-to-end integration in Week 3
 - **M4**: Develop LLM extraction prompts, JSON schema, span validator
 - **M2**: Continue corpus collection, begin synthetic term-sheet generator
 
 ---
 
-*Last updated: 2026-10-19 by M2*
+*Last updated: 2026-10-24 by M3*

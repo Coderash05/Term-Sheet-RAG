@@ -1,5 +1,6 @@
 import networkx as nx
 
+
 def build_ontology_graph():
     G = nx.DiGraph()
 
